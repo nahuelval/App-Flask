@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flaskext.mysql import MySQL
+from datetime import datetime
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -37,8 +38,15 @@ def store():
     _genero = request.form['txtGene']
     _imagen = request.files['txtImg']
 
-    sql = "INSERT INTO movie (nombre,descripcion,genero,imagen) values(%s, %s, %s, %s);"
-    datos = (_nombre,_descripcion,_genero,_imagen.filename)
+    now = datetime.now()
+    tiempo = now.strftime("%Y%H%M%S")
+
+    if _imagen.filename != '':
+        nuevoNombreImagen = tiempo + '_' + _imagen.filename
+        _imagen.save('uploads/' + nuevoNombreImagen)
+
+    sql = "INSERT INTO movie (nombre,descripcion,genero,image) values(%s, %s, %s, %s);"
+    datos = (_nombre,_descripcion,_genero,nuevoNombreImagen)
 
     conn = mysql.connect()
     cursor = conn.cursor()
