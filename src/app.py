@@ -60,6 +60,15 @@ def store():
 
 @app.route('/delete/<int:id>')
 def delete(id):
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    
+    sql = "SELECT image FROM movie WHERE id=%s"
+    cursor.execute(sql, id)
+
+    nombreFoto = cursor.fetchone()[0]
+    os.remove(app.config['UPLOADS'] + nombreFoto)
+
     sql = "DELETE FROM movie WHERE id=%s"
 
     conn = mysql.connect()
@@ -108,9 +117,6 @@ def update():
         nuevoNombreImagen = tiempo + '_' + _imagen.filename
         _imagen.save('uploads/' + nuevoNombreImagen)
         _imagen = nuevoNombreImagen
-
-        sql = "SELECT image FROM movie WHERE id=%s"
-        cursor.execute(sql, id)
 
         os.remove(app.config['UPLOADS'] + nombreFoto)
     else:
