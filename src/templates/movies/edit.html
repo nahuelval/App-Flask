@@ -1,3 +1,4 @@
+{% include 'header.html' %}
 <form method="POST" action="/update" enctype="multipart/form-data">
     <input hidden type="text" value="{{movie[0]}}" name="txtId" id="txtId">
     <label for="txtNombre">Nombre:</label>
@@ -15,3 +16,4 @@
     <br />
     <input type="submit" value="Modificar Pelicula">
 </form>
+{% include 'footer.html' %}
