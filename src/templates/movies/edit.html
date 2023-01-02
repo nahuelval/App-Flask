@@ -1,0 +1,17 @@
+<form method="POST" action="/update" enctype="multipart/form-data">
+    <input hidden type="text" value="{{movie[0]}}" name="txtId" id="txtId">
+    <label for="txtNombre">Nombre:</label>
+    <input type="text" name="txtNombre" id="txtNombre" value="{{movie[1]}}">
+    <br />
+    <label for="txtDesc">Descripción:</label>
+    <input type="text" name="txtDesc" id="txtDesc" value="{{movie[2]}}">
+    <br />
+    <label for="txtGene">Genero:</label>
+    <input type="text" name="txtGene" id="txtGene" value="{{movie[3]}}">
+    <br />
+    <label for="txtImg">Imagen:</label>
+    Imagen: {{movie[4]}}
+    <input type="file" name="txtImg" id="txtImg">
+    <br />
+    <input type="submit" value="Modificar Pelicula">
+</form>

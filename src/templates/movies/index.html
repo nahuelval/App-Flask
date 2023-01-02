@@ -25,6 +25,10 @@
                 <td>{{movie[1]}}</td>
                 <td>{{movie[2]}}</td>
                 <td>{{movie[3]}}</td>
+                <td>
+                    <a href="/modify/{{movie[0]}}">Editar</a>
+                    <a href="/delete/{{movie[0]}}">Borrar</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
