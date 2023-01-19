@@ -1,19 +1,36 @@
 {% include 'header.html' %}
 <form method="POST" action="/update" enctype="multipart/form-data">
-    <input hidden type="text" value="{{movie[0]}}" name="txtId" id="txtId">
-    <label for="txtNombre">Nombre:</label>
-    <input type="text" name="txtNombre" id="txtNombre" value="{{movie[1]}}">
-    <br />
-    <label for="txtDesc">Descripción:</label>
-    <input type="text" name="txtDesc" id="txtDesc" value="{{movie[2]}}">
-    <br />
-    <label for="txtGene">Genero:</label>
-    <input type="text" name="txtGene" id="txtGene" value="{{movie[3]}}">
-    <br />
-    <label for="txtImg">Imagen:</label>
-    Imagen: {{movie[4]}}
-    <input type="file" name="txtImg" id="txtImg">
-    <br />
-    <input type="submit" value="Modificar Pelicula">
+    <div class="card">
+        <div class="card-header">
+            Modificar Pelicula
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <input class="d-none" type="text" value="{{movie.id}}" name="txtId" id="txtId">
+                <div class="form-group">
+                    <label for="txtNombre">Nombre</label>
+                    <input type="text" name="txtNombre" id="txtNombre" value="{{movie.nombre}}">
+                </div>
+                <div class="from-group">
+                    <label for="txtDesc">Descripción:</label>
+                    <input type="text" name="txtDesc" id="txtDesc" value="{{movie.descripcion}}">
+                </div>
+                <div class="form-group">
+                    <label for="txtGene">Genero:</label>
+                    <input type="text" name="txtGene" id="txtGene" value="{{movie.genero}}">
+                </div>
+                <div class="form-group">
+                    <label for="txtImg">Imagen:</label>
+                    <img class="img-thumbnail" width="100" alt="imagen" src="{{url_for('uploads', nombreFoto=movie.image)}}">
+                    {{movie.image}}
+                    <input type="file" name="txtImg" id="txtImg">
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-success" type="submit" value="Modificar Pelicula">
+                    <a class="btn btn-primary" href="{{ url_for('index') }}">Volver</a>
+                </div>
+            </p>
+        </div>
+    </div>
 </form>
 {% include 'footer.html' %}
