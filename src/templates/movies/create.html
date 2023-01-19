@@ -1,0 +1,42 @@
+{% include 'header.html' %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-danger" role="alert">
+            {% for msg in messages %}
+                {{ msg }}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="/movie/create" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">Agregar Pelicula</div>
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            <div class="form-group">
+                <label for="txtNombre">Nombre:</label>
+                <input type="text" name="txtNombre" id="txtNombre">
+            </div>
+            <div class="form-group">
+                <label for="txtDesc">Descripción:</label>
+                <input type="text" name="txtDesc" id="txtDesc">
+            </div>
+            <div class="form-group">
+                <label for="txtGene">Genero:</label>
+                <input type="text" name="txtGene" id="txtGene">
+            </div>
+            <div class="form-group">
+                <label for="txtImg">Imagen:</label>
+                <input type="file" name="txtImg" id="txtImg">
+            </div>
+            <div class="form-group">
+                <input class="btn btn-success" type="submit" value="Agregar nueva pelicula">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Volver</a>
+            </div>
+        </p>
+    </div>
+</form>
+{% include 'footer.html' %}
