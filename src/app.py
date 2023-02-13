@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, flash
 from flaskext.mysql import MySQL
 from datetime import datetime
+from decouple import config
 import os
 
 from pymysql.cursors import DictCursor
@@ -8,11 +9,11 @@ from pymysql.cursors import DictCursor
 app = Flask(__name__)
 mysql = MySQL()
 
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = ''
-app.config['MYSQL_DATABASE_DB'] = 'movies'
-app.config['SECRET_KEY'] = 'appflask'
+app.config['MYSQL_DATABASE_HOST'] = config('MYSQL_HOST')
+app.config['MYSQL_DATABASE_USER'] = config('MYSQL_USER')
+app.config['MYSQL_DATABASE_PASSWORD'] = config('MYSQL_PASSWORD')
+app.config['MYSQL_DATABASE_DB'] = config('MYSQL_DB')
+app.config['SECRET_KEY'] = config('SECRET_KEY')
 
 UPLOADS = os.path.join('uploads/')
 app.config['UPLOADS'] = UPLOADS
