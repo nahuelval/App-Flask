@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 from flaskext.mysql import MySQL
 from datetime import datetime
 from decouple import config
+from PIL import Image
 import os
 
 from pymysql.cursors import DictCursor
@@ -15,8 +16,7 @@ app.config['MYSQL_DATABASE_PASSWORD'] = config('MYSQL_PASSWORD')
 app.config['MYSQL_DATABASE_DB'] = config('MYSQL_DB')
 app.config['SECRET_KEY'] = config('SECRET_KEY')
 
-UPLOADS = os.path.join('uploads/')
-app.config['UPLOADS'] = UPLOADS
+app.config['UPLOADS'] = config('UPLOADS')
 
 mysql.init_app(app)
 
@@ -76,8 +76,11 @@ def crear_pelicula():
         nuevoNombreImagen = ''
 
         if _imagen.filename != '':
+            imagen = Image.open(_imagen)
+            if imagen.width > 1980 and imagen.height > 1080:
+                imagen = imagen.resize((1980, 1080))
             nuevoNombreImagen = tiempo + '_' + _imagen.filename
-            _imagen.save('uploads/' + nuevoNombreImagen)
+            imagen.save(app.config['UPLOADS'] + nuevoNombreImagen, optimize=True)
 
         sql = "INSERT INTO movie (nombre,descripcion,genero,image) values(%s, %s, %s, %s);"
         datos = (_nombre,_descripcion,_genero,nuevoNombreImagen)
@@ -102,6 +105,7 @@ def delete(id):
     except:
         pass
 
+    print(app.config['UPLOADS'] + nombreFoto)
     sql = "DELETE FROM movie WHERE id=(%s)"
 
     queryMySql(sql,datos)
@@ -115,7 +119,6 @@ def modify(id):
     datos = (id,)
 
     movie = queryMySql(sql, datos, "one")
-    print(movie)
 
     return render_template('movies/edit.html', movie=movie)
 

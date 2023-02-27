@@ -16,6 +16,7 @@
 - Jinja2==3.1.2
 - MarkupSafe==2.1.1
 - mysqlclient==2.1.1
+- Pillow==9.4.0
 - pycparser==2.21
 - PyMySQL==1.0.2
 - python-decouple==3.7
