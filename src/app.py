@@ -23,7 +23,10 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor(cursor=DictCursor)
 
-def queryMySql(query, data, tipoDeRetorno=None):
+
+# FUNCIONES #
+
+def queryMySql(query, data=None, tipoDeRetorno=None):
     if data != None:
         cursor.execute(query,data)
     else:
@@ -39,18 +42,52 @@ def queryMySql(query, data, tipoDeRetorno=None):
     
     return registro
 
+def selectSearch(name, desc, gene):
+    count = 0
+
+    if name != '':
+        name = (name + '%')
+        name = ("nombre LIKE CONCAT('%s')" % name)
+        print(name)
+        count += 1
+    else:
+        name = ''
+
+    if desc != '':
+        desc = (desc + '%')
+        desc = ("descripcion LIKE CONCAT('%s')" % desc)
+        if count > 0:
+            desc = "AND " + desc
+        print(desc)
+    else:
+        desc = ''
+
+    if gene != '':
+        gene = (gene + '%')
+        gene = ("genero LIKE CONCAT('%s')" % gene)
+        if count > 0:
+            gene = "AND " + gene
+        print(gene)
+    else:
+        gene = ''
+
+    sqlQuery = ("SELECT * FROM movie WHERE (%s %s %s);" % (name,desc,gene))
+    
+    return sqlQuery
+
+
+# RUTAS #
+
 @app.route('/moviepic/<path:nombreFoto>')
 def uploads(nombreFoto):
     return send_from_directory(os.path.join('uploads'), nombreFoto)
 
 @app.route('/')
 def index():
-
     sql = "SELECT * FROM movie;"
     cursor.execute(sql)
 
-    movies = queryMySql(sql,None,"all")
-    print(movies)
+    movies = queryMySql(sql,None)
 
     conn.commit()
 
@@ -77,20 +114,17 @@ def crear_pelicula():
 
         if _imagen.filename != '':
             imagen = Image.open(_imagen)
-            if imagen.width > 1980 and imagen.height > 1080:
-                imagen = imagen.resize((1980, 1080))
+            if imagen.width > 1920 and imagen.height > 1080:
+                imagen = imagen.resize((1080, 1920))
             nuevoNombreImagen = tiempo + '_' + _imagen.filename
             imagen.save(app.config['UPLOADS'] + nuevoNombreImagen, optimize=True)
 
         sql = "INSERT INTO movie (nombre,descripcion,genero,image) values(%s, %s, %s, %s);"
         datos = (_nombre,_descripcion,_genero,nuevoNombreImagen)
-        print(len(datos))
 
         queryMySql(sql,datos)
 
         return redirect('/')
-
-
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -151,10 +185,27 @@ def update():
     
     sql = "UPDATE movie SET nombre = (%s), descripcion = (%s), genero = (%s), image = (%s) WHERE id = (%s)"
     datos = (_nombre, _descripcion, _genero, _imagen, id)
-    print("linea 143", datos)
     queryMySql(sql, datos)
 
     return redirect('/')
+
+@app.route('/buscar', methods=["GET","POST"])
+def busqueda():
+    _nombre = request.form['busqNombre']
+    _descripcion = request.form['busqDescripcion']
+    _genero = request.form['busqGenero']
+
+    if _nombre == '' and _descripcion == '' and _genero == '':
+        return redirect('/')
+
+    sql = selectSearch(_nombre,_descripcion,_genero)
+
+    print(sql)
+
+    movies = queryMySql(sql)
+
+    return render_template('movies/index.html', movies = movies)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

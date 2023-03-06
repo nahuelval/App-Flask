@@ -1,6 +1,16 @@
 {% include 'header.html' %}
 
 <table class="table table-dark">
+    <div>
+        <form method="POST" action="{{ url_for('busqueda') }}">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Nombre" name="busqNombre" id="busqNombre">
+                <input type="text" class="form-control" placeholder="Descripcion" name="busqDescripcion" id="busqDescripcion">
+                <input type="text" class="form-control" placeholder="Genero" name="busqGenero" id="busqGenero">
+                <input method="POST"  class="btn btn-default" href="" value="Buscar" type="submit"></button>
+            </div>
+        </form>
+    </div>
     <thead class="thead-dark">
         <tr>
             <th>Foto</th>
